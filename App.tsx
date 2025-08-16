@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { SplashScreen } from './components/SplashScreen';
-import { CharacterCreation } from './components/CharacterCreation';
-import { GameScreen } from './components/GameScreen';
-import { Credits } from './components/Credits';
-import { LockedFeatureDialog } from './components/LockedFeatureDialog';
+import React, { useState, useEffect } from "react";
+import { SplashScreen } from "./components/SplashScreen";
+import { CharacterCreation } from "./components/CharacterCreation";
+import { GameScreen } from "./components/GameScreen";
+import { Credits } from "./components/Credits";
+import { LockedFeatureDialog } from "./components/LockedFeatureDialog";
 
 export interface Character {
   name: string;
-  gender: 'male' | 'female';
+  gender: "male" | "female";
   age: number;
   hairstyle: number;
   skin: number;
@@ -41,11 +41,13 @@ export interface GameState {
   totalViews: number;
 }
 
-type Screen = 'splash' | 'character' | 'game' | 'credits';
+type Screen = "splash" | "character" | "game" | "credits";
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<Screen>('splash');
-  const [showLockedDialog, setShowLockedDialog] = useState(false);
+  const [currentScreen, setCurrentScreen] =
+    useState<Screen>("splash");
+  const [showLockedDialog, setShowLockedDialog] =
+    useState(false);
   const [gameState, setGameState] = useState<GameState>({
     character: null,
     skills: { rap: 1, flow: 1, charisma: 1 },
@@ -61,26 +63,29 @@ export default function App() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setCurrentScreen('character');
+      setCurrentScreen("character");
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     const handleShowCredits = () => {
-      setCurrentScreen('credits');
+      setCurrentScreen("credits");
     };
-    
-    window.addEventListener('showCredits', handleShowCredits);
+
+    window.addEventListener("showCredits", handleShowCredits);
     return () => {
-      window.removeEventListener('showCredits', handleShowCredits);
+      window.removeEventListener(
+        "showCredits",
+        handleShowCredits,
+      );
     };
   }, []);
 
   // Hide Figma native bar and ensure fullscreen display
   useEffect(() => {
     // Add styles to hide Figma UI elements
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       /* Hide Figma native bar and UI elements */
       [data-figma-native-bar],
@@ -116,7 +121,7 @@ export default function App() {
       }
     `;
     document.head.appendChild(style);
-    
+
     return () => {
       if (document.head.contains(style)) {
         document.head.removeChild(style);
@@ -125,12 +130,12 @@ export default function App() {
   }, []);
 
   const handleCharacterCreated = (character: Character) => {
-    setGameState(prev => ({ ...prev, character }));
-    setCurrentScreen('game');
+    setGameState((prev) => ({ ...prev, character }));
+    setCurrentScreen("game");
   };
 
   const handleBackToGame = () => {
-    setCurrentScreen('game');
+    setCurrentScreen("game");
   };
 
   const handleLockedFeature = () => {
@@ -139,11 +144,15 @@ export default function App() {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case 'splash':
+      case "splash":
         return <SplashScreen />;
-      case 'character':
-        return <CharacterCreation onCharacterCreated={handleCharacterCreated} />;
-      case 'game':
+      case "character":
+        return (
+          <CharacterCreation
+            onCharacterCreated={handleCharacterCreated}
+          />
+        );
+      case "game":
         return (
           <GameScreen
             gameState={gameState}
@@ -151,7 +160,7 @@ export default function App() {
             onLockedFeature={handleLockedFeature}
           />
         );
-      case 'credits':
+      case "credits":
         return <Credits onBack={handleBackToGame} />;
       default:
         return <SplashScreen />;
@@ -161,9 +170,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white overflow-hidden fixed inset-0 z-50">
       {renderScreen()}
-      <LockedFeatureDialog 
-        isOpen={showLockedDialog} 
-        onClose={() => setShowLockedDialog(false)} 
+      <LockedFeatureDialog
+        isOpen={showLockedDialog}
+        onClose={() => setShowLockedDialog(false)}
       />
     </div>
   );
